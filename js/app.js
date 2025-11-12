@@ -9,31 +9,25 @@ function adicionar() {
         alert("Selecione um produto válido.");
         return;
     }
-
-
-    // Verificar se a quantidade inserida é válida
+    // Recupera e converte a quantidade antes de validar
+    let quantidade = parseInt(document.getElementById('quantidade').value, 10);
     if (isNaN(quantidade) || quantidade <= 0) {
         alert("Insira uma quantidade válida.");
         return;
     }
 
     let nomeProduto = produto.split('-')[0];
-    
-    // A linha abaixo estava com um erro de sintaxe.
-    // A atribuição (=) deve vir depois do nome da variável.
-    // Usamos parseFloat para garantir que o valor seja tratado como um número decimal.
-    let valorUnitario = parseFloat(produto.split('R$')[1]);
-    
-    let quantidade = document.getElementById('quantidade').value; 
 
-    if  (quantidade <= 0) {
-        alert('Quantidade inválida');
+    // Extrai e converte o valor unitário (aceita vírgula como separador decimal)
+    let rawValor = (produto.split('R$')[1] || '').replace(',', '.').trim();
+    let valorUnitario = parseFloat(rawValor);
+    if (isNaN(valorUnitario)) {
+        alert('Valor do produto inválido.');
         return;
     }
     
     // Calcula o preço total (subtotal) do item
-    // Convertemos a quantidade para um número usando parseInt para garantir a operação matemática.
-    let preco = parseInt(quantidade) * valorUnitario;
+    let preco = quantidade * valorUnitario;
     
     let carrinho = document.getElementById('lista-produtos');
     
@@ -43,10 +37,10 @@ function adicionar() {
     </section>`;
     totalGeral = totalGeral + preco;
     
-    // Atualiza o valor total no HTML
+    // Atualiza o valor total no HTML (formatando com 2 casas decimais)
     let campoTotal = document.getElementById('valor-total');
-    campoTotal.textContent =  `R$ ${totalGeral}`;
-    document.get.ElementById('quantidade').value = 0;
+    campoTotal.textContent = `R$ ${totalGeral.toFixed(2)}`;
+    document.getElementById('quantidade').value = 0;
 }
 
 function limpar() {
